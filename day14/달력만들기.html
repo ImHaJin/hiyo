@@ -5,7 +5,7 @@
 <title>달력만들기</title>
 <style>
 #wrapper{
-	width:704px;
+	width:724px;
 	height:800px;
 	border:1px solid red;
 	margin:auto;
@@ -13,12 +13,12 @@
 #up{
 	width:100%;
 	height:40px;
-	background:#ffff99;
+	background:#ffccff;
 }
 #dayTitle{
 	width:100%;
 	height:30px;
-	background:#99ff00;
+	background:#99ffff;
 }
 ul{
 	list-style:none;
@@ -28,13 +28,22 @@ ul li{
 	float:left;
 	width:100px;
 }
+select{
+	width:200px;
+	height:40px;
+	background:yellow;
+	color:black;
+	font-size:20pt;
+}
 </style>
+<script src="../lib/lib.js"></script>
 <script src="../lib/DateBox.js"></script>
 <script>
-var down;
+var down;	                                                   
 var sel_yy;
 var sel_mm;
 var sel_dd;
+var dayName=["일요일","월요일","화요일","수요일","목요일","금요일","토요일"];
 
 window.addEventListener("load", function(){
 	init();
@@ -59,20 +68,47 @@ function init(){
 		op.text=i;
 		sel_mm.add(op);
 	}
-		//월 생성 
-	for(var i=0; i<=31;i++){
-		var op=document.createElement("option");
-		op.text=i;
-		sel_dd.add(op);
-	}
 
-	//최대 42개의 날짜 박스를 생성한다!!
-	for(var i=1;i<=42;i++){
-		var box = new DateBox(down, 100,100,i);
-		box.init();
-	}
+	createBox();
 }
 
+//기존에 출력된 달력을 모두 지운다!!
+function deleteBox(){
+	down.innerText="";
+}
+
+//달력 생성 
+function createBox(){
+	//현재 select박스에 선택한 값에 의한 날짜 정보 셋팅!!
+	var d = new Date(sel_yy.value+"-"+sel_mm.value+"-1");
+	//console.log(d);
+
+	//현재 요일을 구한다!! 0~6
+	//console.log(d.getDay()+"번째는 "+dayName[d.getDay()]);
+
+	//최대 42개의 날짜 박스를 생성한다!!
+	var n=0;
+	var lastDate=getLastDate(sel_yy.value, sel_mm.value);
+
+	for(var i=1;i<=42;i++){
+		if( i>d.getDay() && n<lastDate){ 
+			//해당 요일의 인덱스부터 날짜를 증가시킨다
+			n++;
+		var box = new DateBox(down, 100,100,n);
+			box.init();
+		}else{
+			var box = new DateBox(down, 100,100,"");
+			box.init();
+		}
+	}
+
+}
+
+//down 영역에 선택한 날짜에 해당하는 달력이 출력!!
+function showCal(){
+	deleteBox(); //기존꺼 지우고
+	createBox(); //새로 생성
+}
 </script>
 </head>
 <body>
@@ -80,8 +116,7 @@ function init(){
 	<div id="up">
 		<select id="sel_yy"></select>년도
 		<select id="sel_mm"></select>월
-		<select id="sel_dd"></select>일
-		<input type="button" value="검색">
+		<input type="button" value="검색" onClick="showCal()">
 	</div>
 	<div id="dayTitle">
 		<ul>
@@ -94,7 +129,7 @@ function init(){
 			<li>토</li>
 		</ul>
 	</div>
-	<div id="down"></div>
+<div id="down"></div>
 </div>
 </body>
 </html>
