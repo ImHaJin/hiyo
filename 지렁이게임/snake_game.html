@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+<style>
+body{margin:0px;}
+#stage{
+	width:800px;
+	height:800px;
+	position:absolute;
+	background:yellow;
+	margin:auto;
+}
+</style>
+<script src="./Snake.js"></script>
+<script>
+var stage;
+var snakeArray=[];
+var targetX=0;
+var targetY=0;
+var count=1;
+var i=0;
+
+window.addEventListener("load", function(){
+	init();
+});
+
+window.addEventListener("mousemove", function(){
+	targetX=event.clientX;
+	targetY=event.clientY;
+
+});
+
+function init(){
+	stage=document.getElementById("stage");
+
+	createSnake();	
+}
+
+function createSnake(){
+	var snake = new Snake(stage, 50,50,-200,-200,"./images/disk.png");
+	snake.init();
+	snake.img.id="s"+count;
+
+	snake.targetX=targetX;
+	snake.targetY=targetY;
+
+	if(count>50){ //20개만을 유지하기
+		i++;
+		var obj=document.getElementById("s"+i);
+		console.log(obj.id);
+		obj.parentElement.removeChild(obj);
+	}
+	count++;
+	setTimeout("createSnake()", 20);
+}
+</script>
+</head>
+<body>
+<div id="stage"></div>
+</body>
+</html>
